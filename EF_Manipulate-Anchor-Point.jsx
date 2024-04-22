@@ -1,6 +1,6 @@
 var resourceString = 
 "group{orientation:'column', alignment:['fill', 'fill'], alignChildren:['left', 'top'],\
-    anchorPoint: Panel{orientation:'column', alignment:['fill', 'fill']\
+    anchorPoint: Panel{orientation:'column', alignment:['fill', 'fill'], alignChildren:['center', 'center'],\
     text: 'Anchor Point',\
         topRow: Group{orientation:'row',\
             topLeft: RadioButton{text:''},\
@@ -18,13 +18,14 @@ var resourceString =
             bottomRight: RadioButton{text:''}\
         },\
     },\
-    shiftPoint: Panel{orientation:'row',\
+    shiftPoint: Panel{orientation:'row', alignment:['fill', 'fill'], alignChildren:['center', 'center'],\
         text: 'Shift Position',\
         xText: EditText{text:'0', characters:3},\
         yText: EditText{text:'0', characters:3},\
         zText: EditText{text:'0', characters:3}\
     },\
-    addNull: Checkbox {alignment:'center', text:'Add null?'},\
+    addNull: Checkbox{alignment:'left', text:'Add null?'},\
+    addNull: Checkbox{alignment:'left', text:'Add expression?'},\
     applyButton: Button{text:'Apply', alignment:['center','bottom']}\
 }";
 
