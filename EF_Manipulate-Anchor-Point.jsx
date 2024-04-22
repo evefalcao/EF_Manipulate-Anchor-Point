@@ -25,7 +25,7 @@ var resourceString =
         zText: EditText{text:'0', characters:3}\
     },\
     addNull: Checkbox{alignment:'left', text:'Add null?'},\
-    addNull: Checkbox{alignment:'left', text:'Add expression?'},\
+    addExpression: Checkbox{alignment:'left', text:'Add expression?'},\
     applyButton: Button{text:'Apply', alignment:['center','bottom']}\
 }";
 
