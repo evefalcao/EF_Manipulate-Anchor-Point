@@ -1,53 +1,41 @@
 var resourceString = 
 "group{orientation:'column', alignment: ['fill', 'fill'], alignChildren: ['left', 'top'],\
+    anchorPointGroup: Panel{alignment: ['fill', 'fill'], text: 'Anchor Point',\
+        row1: Group{orientation:'row',\
+            a: RadioButton{},\
+            b: RadioButton{},\
+            c: RadioButton{},\
+        },\
+        row2: Group{orientation:'row',\
+            a: RadioButton{},\
+            b: RadioButton{},\
+            c: RadioButton{},\
+        },\
+        row3: Group{orientation:'row',\
+            a: RadioButton{},\
+            b: RadioButton{},\
+            c: RadioButton{},\
+        },\
+    },\
     offsetPositionGroup: Panel{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Offset position',\
         xLabel: StaticText{text:'X'},\
-        xText: EditText{text: '0', characters: 3},\
+        xText: EditText{text: '0', characters: 4},\
         yLabel: StaticText{text:'Y'},\
-        yText: EditText{text: '0', characters: 3},\
+        yText: EditText{text: '0', characters: 4},\
         zLabel: StaticText{text:'Z'},\
-        zText: EditText{text: '0', characters: 3}\
+        zText: EditText{text: '0', characters: 4}\
     },\
-    addNull: Checkbox{alignment: 'left', text: 'Add null?'},\
-    addExpression: Checkbox{alignment: 'left', text: 'Add expression?'},\
+    extraActionGroup: Group{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center']\
+        addNull: Checkbox{text: 'Add null'},\
+        addExpression: Checkbox{text: 'Add expression'},\
+    },\
     applyButton: Button{text: 'Apply', alignment: ['center', 'bottom']}\
 }";
 
-function createUserInterface (thisObj, userInterfaceString, scriptName){
+function createUserInterface(thisObj, userInterfaceString, scriptName){
 
     var pal = (thisObj instanceof Panel) ? thisObj : new Window("palette", scriptName, undefined, {resizeable: true});
     if (pal == null) return pal;
-
-    var anchorPoint = pal.add("Panel { alignment: ['fill', 'fill'], text: 'Anchor point' }");
-    
-    var row1 = anchorPoint.add("group");
-    var row2 = anchorPoint.add("group");
-    var row3 = anchorPoint.add("group");
-    
-    for (var i = 0; i < 3; i++) {
-        row1.add("radiobutton");
-        row2.add("radiobutton");
-        row3.add("radiobutton");
-    }
-    
-    row1.addEventListener("click", function () {
-        for (var i = 0; i < row1.children.length; i++) {
-            row2.children[i].value = false;
-            row3.children[i].value = false;
-        }
-    });
-    row2.addEventListener("click", function () {
-        for (var i = 0; i < row2.children.length; i++) {
-        row1.children[i].value = false;
-        row3.children[i].value = false;
-        }
-    });
-    row3.addEventListener("click", function () {
-        for (var i = 0; i < row3.children.length; i++) {
-            row1.children[i].value = false;
-            row2.children[i].value = false;
-        }
-    });
 
     var UI = pal.add(userInterfaceString);
 
@@ -63,4 +51,47 @@ function createUserInterface (thisObj, userInterfaceString, scriptName){
     return UI;
 };
 
-createUserInterface(this, resourceString, "Manipulate Anchor Point");
+var UI = createUserInterface(this, resourceString, "EF_Manipulate Anchor Point");
+
+UI.anchorPointGroup.row1.addEventListener("click", function () {
+    for (var i = 0; i < UI.anchorPointGroup.row1.children.length; i++) {
+        UI.anchorPointGroup.row2.children[i].value = false;
+        UI.anchorPointGroup.row3.children[i].value = false;
+    }
+});
+UI.anchorPointGroup.row2.addEventListener("click", function () {
+    for (var i = 0; i < UI.anchorPointGroup.row2.children.length; i++) {
+        UI.anchorPointGroup.row1.children[i].value = false;
+        UI.anchorPointGroup.row3.children[i].value = false;
+    }
+});
+UI.anchorPointGroup.row3.addEventListener("click", function () {
+    for (var i = 0; i < UI.anchorPointGroup.row3.children.length; i++) {
+        UI.anchorPointGroup.row1.children[i].value = false;
+        UI.anchorPointGroup.row2.children[i].value = false;
+    }
+});
+
+UI.offsetPositionGroup.xText.onChange = function(){
+    var xVal = parseFloat(UI.offsetPositionGroup.xText.text);
+    if(isNaN(xVal)){
+        UI.offsetPositionGroup.xText.text = 0;
+    }
+}
+
+UI.offsetPositionGroup.yText.onChange = function(){
+    var yVal = parseFloat(UI.offsetPositionGroup.yText.text);
+    if(isNaN(yVal)){
+        UI.offsetPositionGroup.yText.text = 0;
+    }
+}
+
+UI.offsetPositionGroup.zText.onChange = function(){
+    var zVal = parseFloat(UI.offsetPositionGroup.zText.text);
+    if(isNaN(zVal)){
+        UI.offsetPositionGroup.zText.text = 0;
+    }
+}
+
+
+// UI.applyButton.onClick = function(){};
