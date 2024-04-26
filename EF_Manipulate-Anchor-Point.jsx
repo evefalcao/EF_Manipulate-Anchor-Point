@@ -29,8 +29,8 @@ var resourceString =
     applyButton: Button{text:'Apply', alignment:['center','bottom']}\
 }";
 
-function createUserInterface (thisObj,userInterfaceString,scriptName){
-    var pal = (thisObj instanceof Panel) ? thisObj : new Window("palette", scriptName, undefined,{resizeable: true});
+function createUserInterface (thisObj, userInterfaceString, scriptName){
+    var pal = (thisObj instanceof Panel) ? thisObj : new Window("palette", scriptName, undefined, {resizeable: true});
 
     if (pal == null) return pal;
 
@@ -44,6 +44,40 @@ function createUserInterface (thisObj,userInterfaceString,scriptName){
     if ((pal != null) && (pal instanceof Window)) {
         pal.show();
     }
+
+    userInterfaceString.topRow.addEventListener("click", function() {
+        for (var i = 0; i < userInterfaceString.middleRow.children.length; i++) {
+            userInterfaceString.middleRow.children[i].value = false;
+        }
+    });
+    userInterfaceString.topRow.addEventListener("click", function() {
+        for (var i = 0; i < userInterfaceString.bottomRow.children.length; i++) {
+            userInterfaceString.bottomRow.children[i].value = false;
+        }
+    });
+
+    userInterfaceString.middleRow.addEventListener("click", function() {
+        for (var i = 0; i < userInterfaceString.topRow.children.length; i++) {
+            userInterfaceString.topRow.children[i].value = false;
+        }
+    });
+    userInterfaceString.middleRow.addEventListener("click", function() {
+        for (var i = 0; i < userInterfaceString.bottomRow.children.length; i++) {
+            userInterfaceString.bottomRow.children[i].value = false;
+        }
+    });
+
+    userInterfaceString.bottomRow.addEventListener("click", function() {
+        for (var i = 0; i < userInterfaceString.middleRow.children.length; i++) {
+            userInterfaceString.topRow.children[i].value = false;
+        }
+    });
+    userInterfaceString.bottomRow.addEventListener("click", function() {
+        for (var i = 0; i < userInterfaceString.middleRow.children.length; i++) {
+            userInterfaceString.topRow.children[i].value = false;
+        }
+    });
+
     return UI;
 };
 
