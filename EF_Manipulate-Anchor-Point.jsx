@@ -1,11 +1,11 @@
 var resourceString = 
 "group{orientation:'column', alignment: ['fill', 'fill'], alignChildren: ['left', 'top'],\
-    offsetPosition: Panel{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Offset position',\
-        xTitle: StaticText{text:'X'},\
+    offsetPositionGroup: Panel{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Offset position',\
+        xLabel: StaticText{text:'X'},\
         xText: EditText{text: '0', characters: 3},\
-        yTitle: StaticText{text:'Y'},\
+        yLabel: StaticText{text:'Y'},\
         yText: EditText{text: '0', characters: 3},\
-        zTitle: StaticText{text:'Z'},\
+        zLabel: StaticText{text:'Z'},\
         zText: EditText{text: '0', characters: 3}\
     },\
     addNull: Checkbox{alignment: 'left', text: 'Add null?'},\
