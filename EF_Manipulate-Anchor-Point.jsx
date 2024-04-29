@@ -100,57 +100,86 @@ function createUserInterface(thisObj, userInterfaceString, scriptName){
     return UI;
 };
 
-var UI = createUserInterface(this, resourceString, "EF_Manipulate Anchor Point");
+function moveAnchorPoint(layers){
+    for(var l = 0; l < layers.length; l++){
+        var currentLayer = layers[l];
+        var sourceRect = currentLayer.sourceRectAtTime(0, false);
+        var anchorPointProp = currentLayer.property("ADBE Transform Group").property("ADBE Anchor Point");
 
+        var top = sourceRect.top;
+        var left = sourceRect.left;
+        var width = sourceRect.width;
+        var height = sourceRect.height;
 
+        if (UI.anchorPointGroup.row1.a.value){
+            anchorPointProp.setValue([left, top]);
+        } else if (UI.anchorPointGroup.row1.b.value){
+            anchorPointProp.setValue([left + width / 2, top]);
+        } else if (UI.anchorPointGroup.row1.c.value){
+            anchorPointProp.setValue([left + width, top]);
+
+        } else if (UI.anchorPointGroup.row2.a.value){
+            anchorPointProp.setValue([left, top + height / 2]);
+        } else if (UI.anchorPointGroup.row2.b.value){
+            anchorPointProp.setValue([left + width / 2, top + height / 2]);
+        } else if (UI.anchorPointGroup.row2.c.value){
+            anchorPointProp.setValue([left + width, top + height / 2]);
+
+        } else if (UI.anchorPointGroup.row3.a.value){
+            anchorPointProp.setValue([left, top + height]);
+        } else if (UI.anchorPointGroup.row3.b.value){
+            anchorPointProp.setValue([left + width / 2, top + height]);
+        } else if (UI.anchorPointGroup.row3.c.value){
+            anchorPointProp.setValue([left + width, top + height]);
+        }
+    }
+};
+
+function adjustPosition(layers){
+    for(var l = 0; l < layers.length; l++){
+        var currentLayer = layers[l];
+        var positionProp = currentLayer.property("ADBE Transform Group").property("ADBE Position");
+
+    //     if (UI.anchorPointGroup.row1.a.value){
+    //         positionProp.setValue([left, top]);
+    //     } else if (UI.anchorPointGroup.row1.b.value){
+    //         anchorPointProp.setValue([left + width / 2, top]);
+    //     } else if (UI.anchorPointGroup.row1.c.value){
+    //         anchorPointProp.setValue([left + width, top]);
+
+    //     } else if (UI.anchorPointGroup.row2.a.value){
+    //         anchorPointProp.setValue([left, top + height / 2]);
+    //     } else if (UI.anchorPointGroup.row2.b.value){
+    //         anchorPointProp.setValue([left + width / 2, top + height / 2]);
+    //     } else if (UI.anchorPointGroup.row2.c.value){
+    //         anchorPointProp.setValue([left + width, top + height / 2]);
+
+    //     } else if (UI.anchorPointGroup.row3.a.value){
+    //         anchorPointProp.setValue([left, top + height]);
+    //     } else if (UI.anchorPointGroup.row3.b.value){
+    //         anchorPointProp.setValue([left + width / 2, top + height]);
+    //     } else if (UI.anchorPointGroup.row3.c.value){
+    //         anchorPointProp.setValue([left + width, top + height]);
+    //     }
+    // }
+};
 
 var comp = app.project.activeItem;
 var layers = comp.selectedLayers;
-var anchorPoints = [];
 
+var UI = createUserInterface(this, resourceString, "EF_Manipulate Anchor Point");
 
-// if (comp instanceof CompItem && comp != null){
-//     // adjustLowerThird(myComp, lowerThirdParameters);
-// } else {
-//     alert("Please open a composition to continue.");
-// }
-
+// UI.update();
 
 UI.applyButton.onClick = function(){
-    if(layers.length != null) {
-        for(var l = 0; l < layers.length; l++){
-            var currentLayer = layers[l];
-            var sourceRect = currentLayer.sourceRectAtTime(0, false);
-            var anchorPointProp = currentLayer.property("ADBE Transform Group").property("ADBE Anchor Point");
-
-            var top = sourceRect.top;
-            var left = sourceRect.left;
-            var width = sourceRect.width;
-            var height = sourceRect.height;
-
-            if (UI.anchorPointGroup.row1.a.value){
-                anchorPointProp.setValue([left, top]);
-            } else if (UI.anchorPointGroup.row1.b.value){
-                anchorPointProp.setValue([left + width / 2, top]);
-            } else if (UI.anchorPointGroup.row1.c.value){
-                anchorPointProp.setValue([left + width, top]);
-
-            } else if (UI.anchorPointGroup.row2.a.value){
-                anchorPointProp.setValue([left, top + height / 2]);
-            } else if (UI.anchorPointGroup.row2.b.value){
-                anchorPointProp.setValue([left + width / 2, top + height / 2]);
-            } else if (UI.anchorPointGroup.row2.c.value){
-                anchorPointProp.setValue([left + width, top + height / 2]);
-
-            } else if (UI.anchorPointGroup.row3.a.value){
-                anchorPointProp.setValue([left, top + height]);
-            } else if (UI.anchorPointGroup.row3.b.value){
-                anchorPointProp.setValue([left + width / 2, top + height]);
-            } else if (UI.anchorPointGroup.row3.c.value){
-                anchorPointProp.setValue([left + width, top + height]);
-            }
-        }
-    } else {
-            alert("Select a layer to continue.")
-    }
+    moveAnchorPoint(layers);
 };
+
+
+
+/*
+
+> fix position change on execution
+> fix selection after script is run (find a way to "refresh" the selected layers)
+
+*/
