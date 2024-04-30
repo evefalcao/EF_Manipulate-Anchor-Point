@@ -110,7 +110,7 @@ function moveAnchorPoint(layers, comp){
         var initialPositionValue = positionProp.value;
         var anchorPointProp = currentLayer.property("ADBE Transform Group").property("ADBE Anchor Point");
         var initialAnchorValue = anchorPointProp.value;
-        var finalAnchorValue;
+        var finalAnchorValue, pointPosition, pointPositionTxt;
 
         // Bounding box
         var sourceRect = currentLayer.sourceRectAtTime(currentTime, false);
@@ -119,32 +119,55 @@ function moveAnchorPoint(layers, comp){
         var width = sourceRect.width;
         var height = sourceRect.height;
 
+        // Check if layer has any expression in the Anchor Point
+        if(anchorPointProp.expressionEnabled){
+            anchorPointProp.expression = "";
+        }
+
         // Radio button selection
         // Row 1
         if (UI.anchorPointGroup.row1.a.value){
-            anchorPointProp.setValue([left, top]);
+            pointPosition = [left, top];
+            pointPositionTxt = "[left, top]";
+            anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row1.b.value){
-            anchorPointProp.setValue([left + width / 2, top]);
+            pointPosition = [left + width / 2, top];
+            pointPositionTxt = "[left + width / 2, top]";
+            anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row1.c.value){
-            anchorPointProp.setValue([left + width, top]);
+            pointPosition = [left + width, top];
+            pointPositionTxt = "[left + width, top]";
+            anchorPointProp.setValue(pointPosition);
         // Row 2
         } else if (UI.anchorPointGroup.row2.a.value){
-            anchorPointProp.setValue([left, top + height / 2]);
+            pointPosition = [left, top + height / 2];
+            pointPositionTxt = "[left, top + height / 2]";
+            anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row2.b.value){
-            anchorPointProp.setValue([left + width / 2, top + height / 2]);
+            pointPosition = [left + width / 2, top + height / 2];
+            pointPositionTxt = "[left + width / 2, top + height / 2]";
+            anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row2.c.value){
-            anchorPointProp.setValue([left + width, top + height / 2]);
+            pointPosition = [left + width, top + height / 2];
+            pointPositionTxt = "[left + width, top + height / 2]";
+            anchorPointProp.setValue(pointPosition);
         // Row 3
         } else if (UI.anchorPointGroup.row3.a.value){
-            anchorPointProp.setValue([left, top + height]);
+            pointPosition = [left, top + height];
+            pointPositionTxt = "[left, top + height]";
+            anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row3.b.value){
-            anchorPointProp.setValue([left + width / 2, top + height]);
+            pointPosition = [left + width / 2, top + height];
+            pointPositionTxt = "[left + width / 2, top + height]";
+            anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row3.c.value){
-            anchorPointProp.setValue([left + width, top + height]);
+            pointPosition = [left + width, top + height];
+            pointPositionTxt = "[left + width, top + height]";
+            anchorPointProp.setValue(pointPosition);
         }
         finalAnchorValue = anchorPointProp.value;
 
-        // Add the offset anchor point value
+        // Add the "Offset Anchor Point" value
         var offsetX = parseFloat(UI.offsetAnchorPoint.xText.text);
         var offsetY = parseFloat(UI.offsetAnchorPoint.yText.text);
         var offsetZ = parseFloat(UI.offsetAnchorPoint.zText.text);
@@ -154,12 +177,7 @@ function moveAnchorPoint(layers, comp){
             finalAnchorValue = anchorPointProp.value;
         };
 
-        // Move position
-        var distance = [finalAnchorValue[0] - initialAnchorValue[0], finalAnchorValue[1] - initialAnchorValue[1], finalAnchorValue[2] - initialAnchorValue[2]]; // final anchor point position - initial anchor point position
-        var newPosition = [initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1], initialPositionValue[2] + distance[2]]
-        positionProp.setValue(newPosition);
-
-        // Add null to selected layer
+        // Add a null to selected layer
         if(UI.extraActionGroup.addNull.value){
             var nullCtrl = comp.layers.addNull();
             nullCtrl.name = "Null Control - " + (l + 1);
@@ -167,6 +185,16 @@ function moveAnchorPoint(layers, comp){
             nullPositionProp.setValue(newPosition);
             currentLayer.parent = nullCtrl;
         }
+
+        // Add expression
+        if(UI.extraActionGroup.addExpression.value){
+            anchorPointProp.expression = "let layerRect = thisLayer.sourceRectAtTime(time, false);\nlet top = layerRect.top;\nlet left = layerRect.left;\nlet width = layerRect.width;\nlet height = layerRect.height;\n\n".concat(pointPositionTxt);
+        }
+
+        // Move position
+        var distance = [finalAnchorValue[0] - initialAnchorValue[0], finalAnchorValue[1] - initialAnchorValue[1], finalAnchorValue[2] - initialAnchorValue[2]]; // final anchor point position - initial anchor point position
+        var newPosition = [initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1], initialPositionValue[2] + distance[2]]
+        positionProp.setValue(newPosition);
     }
 };
 
