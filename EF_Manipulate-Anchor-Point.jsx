@@ -16,14 +16,14 @@ var resourceString =
             b: RadioButton{},\
             c: RadioButton{},\
         },\
-    },\
-    offsetPositionGroup: Panel{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Offset position',\
-        xLabel: StaticText{text:'X'},\
-        xText: EditText{text: '0', characters: 4},\
-        yLabel: StaticText{text:'Y'},\
-        yText: EditText{text: '0', characters: 4},\
-        zLabel: StaticText{text:'Z'},\
-        zText: EditText{text: '0', characters: 4}\
+        offsetPositionGroup: Panel{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Offset position',\
+            xLabel: StaticText{text:'X'},\
+            xText: EditText{text: '0', characters: 4},\
+            yLabel: StaticText{text:'Y'},\
+            yText: EditText{text: '0', characters: 4},\
+            zLabel: StaticText{text:'Z'},\
+            zText: EditText{text: '0', characters: 4}\
+        },\
     },\
     extraActionGroup: Group{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center']\
         addNull: Checkbox{text: 'Add null'},\
@@ -80,19 +80,19 @@ function createUserInterface(thisObj, userInterfaceString, scriptName){
     }
 
     // Default state for the offset value
-    offsetPositionGroup.xText.onChange = function(){
+    anchorPointGroup.offsetPositionGroup.xText.onChange = function(){
         var xVal = parseFloat(offsetPositionGroup.xText.text);
         if(isNaN(xVal)){
             offsetPositionGroup.xText.text = 0;
         }
     }
-    offsetPositionGroup.yText.onChange = function(){
+    anchorPointGroup.offsetPositionGroup.yText.onChange = function(){
         var yVal = parseFloat(offsetPositionGroup.yText.text);
         if(isNaN(yVal)){
             offsetPositionGroup.yText.text = 0;
         }
     }
-    offsetPositionGroup.zText.onChange = function(){
+    anchorPointGroup.offsetPositionGroup.zText.onChange = function(){
         var zVal = parseFloat(offsetPositionGroup.zText.text);
         if(isNaN(zVal)){
             offsetPositionGroup.zText.text = 0;
@@ -146,7 +146,6 @@ function moveAnchorPoint(layers){
         // Move position
         var distance = [finalAnchorValue[0] - initialAnchorValue[0], finalAnchorValue[1] - initialAnchorValue[1], finalAnchorValue[2] - initialAnchorValue[2]]; // final anchor point position - initial anchor point position
         positionProp.setValue([initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1], initialPositionValue[2] + distance[2]]);
-        alert(distance)
     }
 };
 
