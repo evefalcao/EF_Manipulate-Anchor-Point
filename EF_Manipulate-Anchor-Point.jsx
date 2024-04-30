@@ -17,7 +17,7 @@ var resourceString =
             c: RadioButton{},\
         },\
     },\
-    offsetPositionGroup: Panel{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Offset Anchor Point',\
+    offsetAnchorPoint: Panel{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Offset Anchor Point',\
         xLabel: StaticText{text:'X'},\
         xText: EditText{text: '0', characters: 4},\
         yLabel: StaticText{text:'Y'},\
@@ -49,7 +49,7 @@ function createUserInterface(thisObj, userInterfaceString, scriptName){
     }
 
     var anchorPointGroup = UI.anchorPointGroup;
-    var offsetPositionGroup = UI.offsetPositionGroup;
+    var offsetAnchorPoint = UI.offsetAnchorPoint;
     // Check the radio button states
     // Row 1
     for(var c = 0; c < anchorPointGroup.row1.children.length; c++){
@@ -80,22 +80,22 @@ function createUserInterface(thisObj, userInterfaceString, scriptName){
     }
 
     // Default state for the offset value
-    offsetPositionGroup.xText.onChange = function(){
-        var xVal = parseFloat(offsetPositionGroup.xText.text);
+    offsetAnchorPoint.xText.onChange = function(){
+        var xVal = parseFloat(offsetAnchorPoint.xText.text);
         if(isNaN(xVal)){
-            offsetPositionGroup.xText.text = 0;
+            offsetAnchorPoint.xText.text = 0;
         }
     }
-    offsetPositionGroup.yText.onChange = function(){
-        var yVal = parseFloat(offsetPositionGroup.yText.text);
+    offsetAnchorPoint.yText.onChange = function(){
+        var yVal = parseFloat(offsetAnchorPoint.yText.text);
         if(isNaN(yVal)){
-            offsetPositionGroup.yText.text = 0;
+            offsetAnchorPoint.yText.text = 0;
         }
     }
-    offsetPositionGroup.zText.onChange = function(){
-        var zVal = parseFloat(offsetPositionGroup.zText.text);
+    offsetAnchorPoint.zText.onChange = function(){
+        var zVal = parseFloat(offsetAnchorPoint.zText.text);
         if(isNaN(zVal)){
-            offsetPositionGroup.zText.text = 0;
+            offsetAnchorPoint.zText.text = 0;
         }
     }
 
@@ -144,9 +144,20 @@ function moveAnchorPoint(layers, comp){
         }
         finalAnchorValue = anchorPointProp.value;
 
+        // Add the offset anchor point value
+        var offsetX = parseFloat(UI.offsetAnchorPoint.xText.text);
+        var offsetY = parseFloat(UI.offsetAnchorPoint.yText.text);
+        var offsetZ = parseFloat(UI.offsetAnchorPoint.zText.text);
+
+        if(offsetX != 0 || offsetY != 0 || offsetZ != 0){
+            anchorPointProp.setValue([finalAnchorValue[0] + offsetX, finalAnchorValue[1] + offsetY, finalAnchorValue[2] + offsetZ]);
+            finalAnchorValue = anchorPointProp.value;
+        };
+
         // Move position
         var distance = [finalAnchorValue[0] - initialAnchorValue[0], finalAnchorValue[1] - initialAnchorValue[1], finalAnchorValue[2] - initialAnchorValue[2]]; // final anchor point position - initial anchor point position
         positionProp.setValue([initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1], initialPositionValue[2] + distance[2]]);
+
     }
 };
 
