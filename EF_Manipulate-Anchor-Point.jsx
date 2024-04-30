@@ -105,6 +105,8 @@ function moveAnchorPoint(layers){
         var currentLayer = layers[l];
         var sourceRect = currentLayer.sourceRectAtTime(0, false);
         var anchorPointProp = currentLayer.property("ADBE Transform Group").property("ADBE Anchor Point");
+        var currentAnchorValue = anchorPointProp.value;
+        var positionProp = currentLayer.property("ADBE Transform Group").property("ADBE Position");
 
         var top = sourceRect.top;
         var left = sourceRect.left;
@@ -132,13 +134,15 @@ function moveAnchorPoint(layers){
         } else if (UI.anchorPointGroup.row3.c.value){
             anchorPointProp.setValue([left + width, top + height]);
         }
+        var positionDif = [anchorPointProp.value[0] - currentAnchorValue[0], anchorPointProp.value[1] - currentAnchorValue[1]]
+        positionProp.setValue([positionProp.value[0] + positionDif[0], positionProp.value[1] + positionDif[1]]);
     }
 };
 
-function adjustPosition(layers){
-    for(var l = 0; l < layers.length; l++){
-        var currentLayer = layers[l];
-        var positionProp = currentLayer.property("ADBE Transform Group").property("ADBE Position");
+// function adjustPosition(layers){
+    // for(var l = 0; l < layers.length; l++){
+        // var currentLayer = layers[l];
+        // var positionProp = currentLayer.property("ADBE Transform Group").property("ADBE Position");
 
     //     if (UI.anchorPointGroup.row1.a.value){
     //         positionProp.setValue([left, top]);
@@ -162,24 +166,22 @@ function adjustPosition(layers){
     //         anchorPointProp.setValue([left + width, top + height]);
     //     }
     // }
-};
+// };
 
 var comp = app.project.activeItem;
-var layers = comp.selectedLayers;
 
 var UI = createUserInterface(this, resourceString, "EF_Manipulate Anchor Point");
 
 // UI.update();
 
 UI.applyButton.onClick = function(){
+    var layers = comp.selectedLayers;
     moveAnchorPoint(layers);
 };
 
 
-
 /*
 
-> fix position change on execution
-> fix selection after script is run (find a way to "refresh" the selected layers)
+> test backick `` for strings
 
 */
