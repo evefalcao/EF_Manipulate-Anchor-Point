@@ -1,4 +1,4 @@
-var resourceString = 
+﻿var resourceString = 
 "group{orientation:'column', alignment: ['fill', 'fill'], alignChildren: ['left', 'top'],\
     anchorPointGroup: Panel{alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Anchor Point',\
         row1: Group{orientation:'row',\
@@ -103,6 +103,8 @@ function createUserInterface(thisObj, userInterfaceString, scriptName){
 };
 
 function moveAnchorPoint(layers, comp){
+    app.beginUndoGroup("Manipulate Anchor Point");
+
     for(var l = 0; l < layers.length; l++){
         var currentLayer = layers[l];
         var currentTime = comp.time;
@@ -177,25 +179,30 @@ function moveAnchorPoint(layers, comp){
             finalAnchorValue = anchorPointProp.value;
         };
 
-        // Add a null to selected layer
-        if(UI.extraActionGroup.addNull.value){
-            var nullCtrl = comp.layers.addNull();
-            nullCtrl.name = "Null Control - " + (l + 1);
-            var nullPositionProp = nullCtrl.property("ADBE Transform Group").property("ADBE Position");
-            nullPositionProp.setValue(newPosition);
-            currentLayer.parent = nullCtrl;
-        }
-
         // Add expression
         if(UI.extraActionGroup.addExpression.value){
-            anchorPointProp.expression = "let layerRect = thisLayer.sourceRectAtTime(time, false);\nlet top = layerRect.top;\nlet left = layerRect.left;\nlet width = layerRect.width;\nlet height = layerRect.height;\n\n".concat(pointPositionTxt);
+            anchorPointProp.expression = "let layerRect = thisLayer.sourceRectAtTime(time, false);\nlet top = layerRect.top;\nlet left = layerRect.left;\nlet width = layerRect.width;\nlet height = layerRect.height;\n\n" + pointPositionTxt;
         }
 
         // Move position
         var distance = [finalAnchorValue[0] - initialAnchorValue[0], finalAnchorValue[1] - initialAnchorValue[1], finalAnchorValue[2] - initialAnchorValue[2]]; // final anchor point position - initial anchor point position
-        var newPosition = [initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1], initialPositionValue[2] + distance[2]]
+        var newPosition = [initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1], initialPositionValue[2] + distance[2]];
         positionProp.setValue(newPosition);
+
+        if(UI.extraActionGroup.addNull.value){
+            if(currentLayer.parent && comp.layer(currentLayer.parent.index).nullLayer){
+                comp.layer(currentLayer.parent.index).remove();
+            // currentLayer.parent = null;
+            }
+
+            var nullCtrl = comp.layers.addNull();
+            nullCtrl.name = "Null Control - " + currentLayer.name;
+            var nullPositionProp = nullCtrl.property("ADBE Transform Group").property("ADBE Position");
+            nullPositionProp.setValue(newPosition);
+            currentLayer.parent = nullCtrl;
+        }
     }
+    app.endUndoGroup();
 };
 
 var comp = app.project.activeItem;
