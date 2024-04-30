@@ -211,4 +211,4 @@ var UI = createUserInterface(this, resourceString, "EF_Manipulate Anchor Point")
 UI.applyButton.onClick = function(){
     var layers = comp.selectedLayers;
     moveAnchorPoint(layers, comp);
-};
+}; v
