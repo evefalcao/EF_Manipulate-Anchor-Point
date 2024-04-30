@@ -144,8 +144,9 @@ function moveAnchorPoint(layers){
         finalAnchorValue = anchorPointProp.value;
 
         // Move position
-        var distance = [finalAnchorValue[0] - initialAnchorValue[0], finalAnchorValue[1] - initialAnchorValue[1]]; // final anchor point position - initial anchor point position
-        positionProp.setValue([initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1]]);
+        var distance = [finalAnchorValue[0] - initialAnchorValue[0], finalAnchorValue[1] - initialAnchorValue[1], finalAnchorValue[2] - initialAnchorValue[2]]; // final anchor point position - initial anchor point position
+        positionProp.setValue([initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1], initialPositionValue[2] + distance[2]]);
+        alert(distance)
     }
 };
 
