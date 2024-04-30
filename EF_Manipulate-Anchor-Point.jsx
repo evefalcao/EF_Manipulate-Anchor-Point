@@ -26,8 +26,8 @@ var resourceString =
         zText: EditText{text: '0', characters: 4}\
     },\
     extraActionGroup: Group{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center']\
-        addNull: Checkbox{text: 'Add null'},\
-        addExpression: Checkbox{text: 'Add expression'},\
+        addNull: Checkbox{text: 'Add Null'},\
+        addExpression: Checkbox{text: 'Add Expression'},\
     },\
     applyButton: Button{text: 'Apply', alignment: ['center', 'bottom']}\
 }";
@@ -156,8 +156,17 @@ function moveAnchorPoint(layers, comp){
 
         // Move position
         var distance = [finalAnchorValue[0] - initialAnchorValue[0], finalAnchorValue[1] - initialAnchorValue[1], finalAnchorValue[2] - initialAnchorValue[2]]; // final anchor point position - initial anchor point position
-        positionProp.setValue([initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1], initialPositionValue[2] + distance[2]]);
+        var newPosition = [initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1], initialPositionValue[2] + distance[2]]
+        positionProp.setValue(newPosition);
 
+        // Add null to selected layer
+        if(UI.extraActionGroup.addNull.value){
+            var nullCtrl = comp.layers.addNull();
+            nullCtrl.name = "Null Control - " + (l + 1);
+            var nullPositionProp = nullCtrl.property("ADBE Transform Group").property("ADBE Position");
+            nullPositionProp.setValue(newPosition);
+            currentLayer.parent = nullCtrl;
+        }
     }
 };
 
