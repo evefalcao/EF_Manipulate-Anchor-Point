@@ -16,14 +16,14 @@ var resourceString =
             b: RadioButton{},\
             c: RadioButton{},\
         },\
-        offsetPositionGroup: Panel{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Offset position',\
-            xLabel: StaticText{text:'X'},\
-            xText: EditText{text: '0', characters: 4},\
-            yLabel: StaticText{text:'Y'},\
-            yText: EditText{text: '0', characters: 4},\
-            zLabel: StaticText{text:'Z'},\
-            zText: EditText{text: '0', characters: 4}\
-        },\
+    },\
+    offsetPositionGroup: Panel{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Offset Anchor Point',\
+        xLabel: StaticText{text:'X'},\
+        xText: EditText{text: '0', characters: 4},\
+        yLabel: StaticText{text:'Y'},\
+        yText: EditText{text: '0', characters: 4},\
+        zLabel: StaticText{text:'Z'},\
+        zText: EditText{text: '0', characters: 4}\
     },\
     extraActionGroup: Group{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center']\
         addNull: Checkbox{text: 'Add null'},\
@@ -80,19 +80,19 @@ function createUserInterface(thisObj, userInterfaceString, scriptName){
     }
 
     // Default state for the offset value
-    anchorPointGroup.offsetPositionGroup.xText.onChange = function(){
+    offsetPositionGroup.xText.onChange = function(){
         var xVal = parseFloat(offsetPositionGroup.xText.text);
         if(isNaN(xVal)){
             offsetPositionGroup.xText.text = 0;
         }
     }
-    anchorPointGroup.offsetPositionGroup.yText.onChange = function(){
+    offsetPositionGroup.yText.onChange = function(){
         var yVal = parseFloat(offsetPositionGroup.yText.text);
         if(isNaN(yVal)){
             offsetPositionGroup.yText.text = 0;
         }
     }
-    anchorPointGroup.offsetPositionGroup.zText.onChange = function(){
+    offsetPositionGroup.zText.onChange = function(){
         var zVal = parseFloat(offsetPositionGroup.zText.text);
         if(isNaN(zVal)){
             offsetPositionGroup.zText.text = 0;
@@ -102,9 +102,10 @@ function createUserInterface(thisObj, userInterfaceString, scriptName){
     return UI;
 };
 
-function moveAnchorPoint(layers){
+function moveAnchorPoint(layers, comp){
     for(var l = 0; l < layers.length; l++){
         var currentLayer = layers[l];
+        var currentTime = comp.time;
         var positionProp = currentLayer.property("ADBE Transform Group").property("ADBE Position");
         var initialPositionValue = positionProp.value;
         var anchorPointProp = currentLayer.property("ADBE Transform Group").property("ADBE Anchor Point");
@@ -112,7 +113,7 @@ function moveAnchorPoint(layers){
         var finalAnchorValue;
 
         // Bounding box
-        var sourceRect = currentLayer.sourceRectAtTime(0, false);
+        var sourceRect = currentLayer.sourceRectAtTime(currentTime, false);
         var top = sourceRect.top;
         var left = sourceRect.left;
         var width = sourceRect.width;
@@ -154,5 +155,5 @@ var UI = createUserInterface(this, resourceString, "EF_Manipulate Anchor Point")
 
 UI.applyButton.onClick = function(){
     var layers = comp.selectedLayers;
-    moveAnchorPoint(layers);
+    moveAnchorPoint(layers, comp);
 };
