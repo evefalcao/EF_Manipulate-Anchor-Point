@@ -25,9 +25,11 @@
         zLabel: StaticText{text:'Z'},\
         zText: EditText{text: '0', characters: 4}\
     },\
-    extraActionGroup: Group{orientation: 'column', alignment: ['fill', 'fill'], alignChildren: ['left', 'center']\
-        addNull: Checkbox{text: 'Add Null'},\
-        parentToNull: Checkbox{text: 'Parent to Null'},\
+    extraActionGroup: Group{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'top'],\
+        nullGroup: Group{orientation: 'column', alignChildren: ['left', 'top'],\
+            addNull: Checkbox{text: 'Add Null'},\
+            parentToNull: Checkbox{text: 'Parent to Null'},\
+        },\
         addExpression: Checkbox{text: 'Add Expression'},\
     },\
     applyButton: Button{text: 'Apply', alignment: ['center', 'bottom']}\
@@ -51,6 +53,7 @@ function createUserInterface(thisObj, userInterfaceString, scriptName){
 
     var anchorPointGroup = UI.anchorPointGroup;
     var offsetAnchorPoint = UI.offsetAnchorPoint;
+    var nullGroup = UI.extraActionGroup.nullGroup;
     // Check the radio button states
     // Row 1
     for(var c = 0; c < anchorPointGroup.row1.children.length; c++){
@@ -99,6 +102,12 @@ function createUserInterface(thisObj, userInterfaceString, scriptName){
             offsetAnchorPoint.zText.text = 0;
         }
     }
+
+    // Other buttons default states
+    anchorPointGroup.row2.b.value = true;
+    nullGroup.addNull.value = true;
+    nullGroup.parentToNull.value = true;
+
 
     return UI;
 };
@@ -199,7 +208,7 @@ function moveAnchorPoint(layers, comp){
         var newPosition = [initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1], initialPositionValue[2] + distance[2]];
         positionProp.setValue(newPosition);
 
-        if(UI.extraActionGroup.addNull.value){
+        if(UI.extraActionGroup.nullGroup.addNull.value){
             var nullCtrl = comp.layers.addNull();
             nullCtrl.name = "Null - " + currentLayer.name + " - " + positionTag;
             nullCtrl.parent = currentLayer.parent; // If layer has a parent, the nullCtrl parent will be set between the layer and its parent
@@ -210,9 +219,11 @@ function moveAnchorPoint(layers, comp){
 
             nullPositionProp.setValue(newPosition);
 
-            if(UI.extraActionGroup.parentToNull.value){
+            if(UI.extraActionGroup.nullGroup.parentToNull.value){
                 currentLayer.parent = nullCtrl;
             }
+            currentLayer.selected = true;
+            nullCtrl.selected = false;
         }
     }
     app.endUndoGroup();
