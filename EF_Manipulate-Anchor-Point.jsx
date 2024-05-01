@@ -17,7 +17,7 @@
             c: RadioButton{},\
         },\
     },\
-    offsetAnchorPoint: Panel{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Offset Anchor Point',\
+    offsetAnchorPoint: Panel{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Offset Point',\
         xLabel: StaticText{text:'X'},\
         xText: EditText{text: '0', characters: 4},\
         yLabel: StaticText{text:'Y'},\
@@ -25,8 +25,9 @@
         zLabel: StaticText{text:'Z'},\
         zText: EditText{text: '0', characters: 4}\
     },\
-    extraActionGroup: Group{orientation: 'row', alignment: ['fill', 'fill'], alignChildren: ['center', 'center']\
+    extraActionGroup: Group{orientation: 'column', alignment: ['fill', 'fill'], alignChildren: ['left', 'center']\
         addNull: Checkbox{text: 'Add Null'},\
+        parentToNull: Checkbox{text: 'Parent to Null'},\
         addExpression: Checkbox{text: 'Add Expression'},\
     },\
     applyButton: Button{text: 'Apply', alignment: ['center', 'bottom']}\
@@ -112,7 +113,7 @@ function moveAnchorPoint(layers, comp){
         var initialPositionValue = positionProp.value;
         var anchorPointProp = currentLayer.property("ADBE Transform Group").property("ADBE Anchor Point");
         var initialAnchorValue = anchorPointProp.value;
-        var finalAnchorValue, pointPosition, pointPositionTxt;
+        var finalAnchorValue, pointPosition, pointPositionTxt, positionTag;
 
         // Bounding box
         var sourceRect = currentLayer.sourceRectAtTime(currentTime, false);
@@ -131,40 +132,49 @@ function moveAnchorPoint(layers, comp){
         if (UI.anchorPointGroup.row1.a.value){
             pointPosition = [left, top];
             pointPositionTxt = "[left, top]";
+            positionTag = "Top Left";
             anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row1.b.value){
             pointPosition = [left + width / 2, top];
             pointPositionTxt = "[left + width / 2, top]";
+            positionTag = "Top Center";
             anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row1.c.value){
             pointPosition = [left + width, top];
             pointPositionTxt = "[left + width, top]";
+            positionTag = "Top Right";
             anchorPointProp.setValue(pointPosition);
         // Row 2
         } else if (UI.anchorPointGroup.row2.a.value){
             pointPosition = [left, top + height / 2];
             pointPositionTxt = "[left, top + height / 2]";
+            positionTag = "Center Left";
             anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row2.b.value){
             pointPosition = [left + width / 2, top + height / 2];
             pointPositionTxt = "[left + width / 2, top + height / 2]";
+            positionTag = "Center";
             anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row2.c.value){
             pointPosition = [left + width, top + height / 2];
             pointPositionTxt = "[left + width, top + height / 2]";
+            positionTag = "Center Right";
             anchorPointProp.setValue(pointPosition);
         // Row 3
         } else if (UI.anchorPointGroup.row3.a.value){
             pointPosition = [left, top + height];
             pointPositionTxt = "[left, top + height]";
+            positionTag = "Bottom Left";
             anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row3.b.value){
             pointPosition = [left + width / 2, top + height];
             pointPositionTxt = "[left + width / 2, top + height]";
+            positionTag = "Bottom Center";
             anchorPointProp.setValue(pointPosition);
         } else if (UI.anchorPointGroup.row3.c.value){
             pointPosition = [left + width, top + height];
             pointPositionTxt = "[left + width, top + height]";
+            positionTag = "Bottom Right";
             anchorPointProp.setValue(pointPosition);
         }
         finalAnchorValue = anchorPointProp.value;
@@ -190,16 +200,19 @@ function moveAnchorPoint(layers, comp){
         positionProp.setValue(newPosition);
 
         if(UI.extraActionGroup.addNull.value){
-            if(currentLayer.parent && comp.layer(currentLayer.parent.index).nullLayer){
-                comp.layer(currentLayer.parent.index).remove();
-            // currentLayer.parent = null;
-            }
-
             var nullCtrl = comp.layers.addNull();
-            nullCtrl.name = "Null Control - " + currentLayer.name;
+            nullCtrl.name = "Null - " + currentLayer.name + " - " + positionTag;
+            nullCtrl.parent = currentLayer.parent; // If layer has a parent, the nullCtrl parent will be set between the layer and its parent
+            nullCtrl.moveBefore(currentLayer); // Move created null before currentLayer
+
+            nullCtrl.threeDLayer = currentLayer.threeDLayer; // If current layer is threeD (true), nullCtrl is threeD (true) and vice versa
             var nullPositionProp = nullCtrl.property("ADBE Transform Group").property("ADBE Position");
+
             nullPositionProp.setValue(newPosition);
-            currentLayer.parent = nullCtrl;
+
+            if(UI.extraActionGroup.parentToNull.value){
+                currentLayer.parent = nullCtrl;
+            }
         }
     }
     app.endUndoGroup();
@@ -211,4 +224,4 @@ var UI = createUserInterface(this, resourceString, "EF_Manipulate Anchor Point")
 UI.applyButton.onClick = function(){
     var layers = comp.selectedLayers;
     moveAnchorPoint(layers, comp);
-}; v
+};
