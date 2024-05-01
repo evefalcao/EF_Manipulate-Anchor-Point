@@ -1,4 +1,13 @@
-﻿var resourceString = 
+﻿/**========================================================================
+ * ?                     EF_Manipulate-Anchor-Point.jsx
+ * @author         :  Eveline Falcão (https://evelinefalcao.com)
+ * @email          :  hello@evelinefalcao.com
+ * @version        :  1.0.0
+ * @createdFor     :  Adobe After Effects CC 2024 (Version 24.1.0 Build 78)
+ * @description    :  Move Anchor Point to selected layer point. Can add and parent a null to the selected layer point. Can apply an expression to pin the anchor point.
+ *========================================================================**/
+
+var resourceString = 
 "group{orientation:'column', alignment: ['fill', 'fill'], alignChildren: ['left', 'top'],\
     anchorPointGroup: Panel{alignment: ['fill', 'fill'], alignChildren: ['center', 'center'], text: 'Anchor Point',\
         row1: Group{orientation:'row',\
