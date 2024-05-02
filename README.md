@@ -34,7 +34,7 @@ Contributions are welcome! If you have any ideas for improvement, bug fixes, or 
 ## License
 This work is licensed under a
 [Creative Commons Attribution-ShareAlike 4.0 International License][cc-by-sa].
-You're free to remix, tweak, and build upon your work **non-commercially** as long as you credit and license your new creations under the same terms.
+You're free to remix, tweak, and build upon your work non-commercially as long as you credit and license your new creations under the same terms. You're free to use this script in your workflow. Do not sell this as a product or iterate upon it and sell.
 
 [![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
 
