@@ -5,11 +5,11 @@ ScriptUI that moves the anchor point of a layer, with options to create a null a
 
 ## Table of Contents
 
-- [Installation](https://github.com/evefalcao/EF_Manipulate-Anchor-Point/blob/main/README.md#installation)
-- [Options](https://github.com/evefalcao/EF_Manipulate-Anchor-Point/blob/main/README.md#options)
-- [Examples](https://github.com/evefalcao/EF_Manipulate-Anchor-Point/blob/main/README.md#examples)
-- [Contributing](https://github.com/evefalcao/EF_Manipulate-Anchor-Point/blob/main/README.md#contributing)
-- [License](https://github.com/evefalcao/EF_Manipulate-Anchor-Point/blob/main/README.md#license)
+- [Installation](https://github.com/evefalcao/EF_Manipulate-Anchor-Point?tab=readme-ov-file#installation)
+- [Options](https://github.com/evefalcao/EF_Manipulate-Anchor-Point?tab=readme-ov-file#options)
+- [Examples](https://github.com/evefalcao/EF_Manipulate-Anchor-Point?tab=readme-ov-file#examples)
+- [Contributing](https://github.com/evefalcao/EF_Manipulate-Anchor-Point?tab=readme-ov-file#contributing)
+- [License](https://github.com/evefalcao/EF_Manipulate-Anchor-Point?tab=readme-ov-file#license)
 
 ## Installation
 1. Download the [latest release](https://github.com/evefalcao/EF_Manipulate-Anchor-Point/archive/refs/heads/main.zip) of the script.
