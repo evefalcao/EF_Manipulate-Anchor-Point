@@ -148,67 +148,63 @@ function moveAnchorPoint(layers, comp){
             anchorPointProp.expression = "";
         }
 
-        // Radio button selection
-        // Row 1
-        if (UI.anchorPointGroup.row1.a.value){
-            pointPosition = [left, top];
-            pointPositionTxt = "[left, top]";
-            positionTag = "Top Left";
-            anchorPointProp.setValue(pointPosition);
-        } else if (UI.anchorPointGroup.row1.b.value){
-            pointPosition = [left + width / 2, top];
-            pointPositionTxt = "[left + width / 2, top]";
-            positionTag = "Top Center";
-            anchorPointProp.setValue(pointPosition);
-        } else if (UI.anchorPointGroup.row1.c.value){
-            pointPosition = [left + width, top];
-            pointPositionTxt = "[left + width, top]";
-            positionTag = "Top Right";
-            anchorPointProp.setValue(pointPosition);
-        // Row 2
-        } else if (UI.anchorPointGroup.row2.a.value){
-            pointPosition = [left, top + height / 2];
-            pointPositionTxt = "[left, top + height / 2]";
-            positionTag = "Center Left";
-            anchorPointProp.setValue(pointPosition);
-        } else if (UI.anchorPointGroup.row2.b.value){
-            pointPosition = [left + width / 2, top + height / 2];
-            pointPositionTxt = "[left + width / 2, top + height / 2]";
-            positionTag = "Center";
-            anchorPointProp.setValue(pointPosition);
-        } else if (UI.anchorPointGroup.row2.c.value){
-            pointPosition = [left + width, top + height / 2];
-            pointPositionTxt = "[left + width, top + height / 2]";
-            positionTag = "Center Right";
-            anchorPointProp.setValue(pointPosition);
-        // Row 3
-        } else if (UI.anchorPointGroup.row3.a.value){
-            pointPosition = [left, top + height];
-            pointPositionTxt = "[left, top + height]";
-            positionTag = "Bottom Left";
-            anchorPointProp.setValue(pointPosition);
-        } else if (UI.anchorPointGroup.row3.b.value){
-            pointPosition = [left + width / 2, top + height];
-            pointPositionTxt = "[left + width / 2, top + height]";
-            positionTag = "Bottom Center";
-            anchorPointProp.setValue(pointPosition);
-        } else if (UI.anchorPointGroup.row3.c.value){
-            pointPosition = [left + width, top + height];
-            pointPositionTxt = "[left + width, top + height]";
-            positionTag = "Bottom Right";
-            anchorPointProp.setValue(pointPosition);
-        }
-        finalAnchorValue = anchorPointProp.value;
-
         // Add the "Offset Anchor Point" value
         var offsetX = parseFloat(UI.offsetAnchorPoint.xText.text);
         var offsetY = parseFloat(UI.offsetAnchorPoint.yText.text);
         var offsetZ = parseFloat(UI.offsetAnchorPoint.zText.text);
 
-        if(offsetX != 0 || offsetY != 0 || offsetZ != 0){
-            anchorPointProp.setValue([finalAnchorValue[0] + offsetX, finalAnchorValue[1] + offsetY, finalAnchorValue[2] + offsetZ]);
-            finalAnchorValue = anchorPointProp.value;
-        };
+        // Radio button selection
+        // Row 1
+        if (UI.anchorPointGroup.row1.a.value){
+            pointPosition = [left + offsetX, top + offsetY, offsetZ];
+            pointPositionTxt = "[left + " + offsetX + ", " + "top + " + offsetY + ", " + offsetZ + "]";
+            positionTag = "Top Left";
+            anchorPointProp.setValue(pointPosition);
+        } else if (UI.anchorPointGroup.row1.b.value){
+            pointPosition = [(left + width / 2) + offsetX, top + offsetY, offsetZ];
+            pointPositionTxt = "[(left + width / 2) + " + offsetX + ", " + "top + " + offsetY + ", " + offsetZ + "]";
+            positionTag = "Top Center";
+            anchorPointProp.setValue(pointPosition);
+        } else if (UI.anchorPointGroup.row1.c.value){
+            pointPosition = [(left + width) + offsetX, top + offsetY, offsetZ];
+            pointPositionTxt = "[(left + width) + " + offsetX + ", " + "top + " + offsetY + ", " + offsetZ + "]";
+            positionTag = "Top Right";
+            anchorPointProp.setValue(pointPosition);
+        // Row 2
+        } else if (UI.anchorPointGroup.row2.a.value){
+            pointPosition = [left + offsetX, (top + height / 2) + offsetY, offsetZ];
+            pointPositionTxt = "[left + " + offsetX + ", " + "(top + height / 2) + " + offsetY + ", " + offsetZ + "]";
+            positionTag = "Center Left";
+            anchorPointProp.setValue(pointPosition);
+        } else if (UI.anchorPointGroup.row2.b.value){
+            pointPosition = [(left + width / 2) + offsetX, (top + height / 2) + offsetY, offsetZ];
+            pointPositionTxt = "[(left + width / 2) + " + offsetX + ", " + "(top + height / 2) + " + offsetY + ", " + offsetZ + "]";
+            positionTag = "Center";
+            anchorPointProp.setValue(pointPosition);
+        } else if (UI.anchorPointGroup.row2.c.value){
+            pointPosition = [(left + width) + offsetX, (top + height / 2) + offsetY, offsetZ];
+            pointPositionTxt = "[(left + width) + " + offsetX + ", " + "(top + height / 2) + " + offsetY + ", " + offsetZ + "]";
+            positionTag = "Center Right";
+            anchorPointProp.setValue(pointPosition);
+        // Row 3
+        } else if (UI.anchorPointGroup.row3.a.value){
+            pointPosition = [left + offsetX, (top + height) + offsetY, offsetZ];
+            pointPositionTxt = "[left + " + offsetX + ", " + "(top + height) + " + offsetY + ", " + offsetZ + "]";
+            positionTag = "Bottom Left";
+            anchorPointProp.setValue(pointPosition);
+        } else if (UI.anchorPointGroup.row3.b.value){
+            pointPosition = [(left + width / 2) + offsetX, (top + height) + offsetY, offsetZ];
+            pointPositionTxt = "[(left + width / 2) + " + offsetX + ", " + "(top + height) + " + offsetY + ", " + offsetZ + "]";
+            positionTag = "Bottom Center";
+            anchorPointProp.setValue(pointPosition);
+        } else if (UI.anchorPointGroup.row3.c.value){
+            pointPosition = [(left + width) + offsetX, (top + height) + offsetY, offsetZ];
+            pointPositionTxt = "[(left + width) + " + offsetX + ", " + "(top + height) + " + offsetY + ", " + offsetZ + "]";
+            positionTag = "Bottom Right";
+            anchorPointProp.setValue(pointPosition);
+        }
+
+        finalAnchorValue = anchorPointProp.value;
 
         // Add expression
         if(UI.extraActionGroup.addExpression.value){
