@@ -40,7 +40,10 @@ var resourceString =
             addNull: Checkbox{text: 'Add Null'},\
             parentToNull: Checkbox{text: 'Parent to Null'},\
         },\
-        addExpression: Checkbox{text: 'Add Expression'},\
+        otherGroup: Group{orientation: 'column', alignChildren: ['left', 'top'],\
+            rotateNull: Checkbox{text: 'Rotate Null'},\
+            addExpression: Checkbox{text: 'Add Expression'},\
+        },\
     },\
     applyButton: Button{text: 'Apply', alignment: ['center', 'bottom']}\
 }"
@@ -352,14 +355,28 @@ function moveAnchorPoint(){
             nullCtrl.threeDLayer = currentLayer.threeDLayer; // If current layer is threeD (true), nullCtrl is threeD (true) and vice versa
 
             var nullPositionProp = nullCtrl.property("ADBE Transform Group").property("ADBE Position");
+            var nullRotationProp = nullCtrl.property("ADBE Transform Group").property("ADBE Orientation");
+            var nullRotationProp = nullCtrl.property("ADBE Transform Group").property("ADBE Rotate X");
+            var nullRotationProp = nullCtrl.property("ADBE Transform Group").property("ADBE Rotate Y");
+            var nullRotationProp = nullCtrl.property("ADBE Transform Group").property("ADBE Rotate Z");
             setPropertyValue(comp, nullPositionProp, newPositionValue)
+
+            if(UI.extraActionGroup.otherGroup.rotateNull.value){
+                if(nullCtrl.threeD){
+                    setPropertyValue(comp, nullRotationProp, initialOrientationProp);
+                    setPropertyValue(comp, nullRotationProp, initialXRotationProp);
+                    setPropertyValue(comp, nullRotationProp, initialYRotationProp);
+                    setPropertyValue(comp, nullRotationProp, initialZRotationProp);
+                }
+                setPropertyValue(comp, nullRotationProp, initialZRotationProp);
+            }
 
             currentLayer.selected = true;
             nullCtrl.selected = false;
         }
 
         // Add expression
-        if(UI.extraActionGroup.addExpression.value){
+        if(UI.extraActionGroup.otherGroup.addExpression.value){
             anchorPointProp.expression = "let layerRect = thisLayer.sourceRectAtTime(time, false);\nlet top = layerRect.top;\nlet left = layerRect.left;\nlet width = layerRect.width;\nlet height = layerRect.height;\n\n" + pointPositionTxt;
         }
 
