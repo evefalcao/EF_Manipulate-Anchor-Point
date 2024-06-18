@@ -5,6 +5,7 @@
  * @version        :  1.0.0
  * @createdFor     :  Adobe After Effects CC 2024 (Version 24.1.0 Build 78)
  * @description    :  Move Anchor Point to selected layer point. Can add and parent a null to the selected layer point. Can apply an expression to pin the anchor point.
+ * @thankyou       :  Charles Bordenave (https://www.nabscripts.com) for RepositionAnchorPoint (version: 3.9) and Zack Lovatt (https://lova.tt/) for zl_CreatePivotalNull (version: 1.1).
  *========================================================================**/
 
 var resourceString = 
@@ -199,21 +200,21 @@ function moveAnchorPoint(){
         var resetRotation = false;
         var resetScale = false;
 
-        var finalAnchorValue, pointPosition, pointPositionTxt, positionTag, originDistanceToNewAnchorPoint;
+        var finalAnchorValue, pointPosition, pointPositionTxt, positionTag, originDistanceToNewAnchorPoint, newAnchorPositionId;
         
-        // Reset rotation
-        if(currentLayer.threeDLayer){
-            if(orientationProp.isModified || xRotationProp.isModified || yRotationProp.isModified || zRotationProp.isModified){
-                setPropertyValue(comp, orientationProp, [0, 0, 0]);
-                setPropertyValue(comp, xRotationProp, 0);
-                setPropertyValue(comp, yRotationProp, 0);
-                setPropertyValue(comp, zRotationProp, 0);
-                resetRotation = true;
-            }
-        } else if(zRotationProp.isModified){
-            setPropertyValue(comp, zRotationProp, 0);
-            resetRotation = true;
-        }
+        // // Reset rotation
+        // if(currentLayer.threeDLayer){
+        //     if(orientationProp.isModified || xRotationProp.isModified || yRotationProp.isModified || zRotationProp.isModified){
+        //         setPropertyValue(comp, orientationProp, [0, 0, 0]);
+        //         setPropertyValue(comp, xRotationProp, 0);
+        //         setPropertyValue(comp, yRotationProp, 0);
+        //         setPropertyValue(comp, zRotationProp, 0);
+        //         resetRotation = true;
+        //     }
+        // } else if(zRotationProp.isModified){
+        //     setPropertyValue(comp, zRotationProp, 0);
+        //     resetRotation = true;
+        // }
 
         // Bounding box
         var sourceRect = currentLayer.sourceRectAtTime(currentTime, false);
@@ -232,58 +233,67 @@ function moveAnchorPoint(){
         var offsetY = parseFloat(UI.offsetAnchorPoint.yText.text);
         var offsetZ = parseFloat(UI.offsetAnchorPoint.zText.text);
 
-        // Radio button selection
         // Center position
         // pointPosition = [width/2, height/2, 0];
 
+        // Radio button selection
         // Row 1
         if (UI.anchorPointGroup.row1.a.value){
             pointPosition = [left + offsetX, top + offsetY, offsetZ];
-            originDistanceToNewAnchorPoint = [0, 0, 0];
+            // originDistanceToNewAnchorPoint = [0, 0, 0];
             pointPositionTxt = "[left + " + offsetX + ", " + "top + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Top Left";
+            newAnchorPositionId = 0;
         } else if (UI.anchorPointGroup.row1.b.value){
             pointPosition = [(left + width / 2) + offsetX, top + offsetY, offsetZ];
-            originDistanceToNewAnchorPoint = [width / 2, 0, 0];
+            // originDistanceToNewAnchorPoint = [width / 2, 0, 0];
             pointPositionTxt = "[(left + width / 2) + " + offsetX + ", " + "top + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Top Center";
+            newAnchorPositionId = 1;
         } else if (UI.anchorPointGroup.row1.c.value){
             pointPosition = [(left + width) + offsetX, top + offsetY, offsetZ];
-            originDistanceToNewAnchorPoint = [width, 0, 0];
+            // originDistanceToNewAnchorPoint = [width, 0, 0];
             pointPositionTxt = "[(left + width) + " + offsetX + ", " + "top + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Top Right";
+            newAnchorPositionId = 2;
         // Row 2
         } else if (UI.anchorPointGroup.row2.a.value){
             pointPosition = [left + offsetX, (top + height / 2) + offsetY, offsetZ];
-            originDistanceToNewAnchorPoint = [0, height / 2, 0];
+            // originDistanceToNewAnchorPoint = [0, height / 2, 0];
             pointPositionTxt = "[left + " + offsetX + ", " + "(top + height / 2) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Center Left";
+            newAnchorPositionId = 3;
         } else if (UI.anchorPointGroup.row2.b.value){
             pointPosition = [(left + width / 2) + offsetX, (top + height / 2) + offsetY, offsetZ];
-            originDistanceToNewAnchorPoint = [width / 2, height / 2, 0];
+            // originDistanceToNewAnchorPoint = [width / 2, height / 2, 0];
             pointPositionTxt = "[(left + width / 2) + " + offsetX + ", " + "(top + height / 2) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Center";
+            newAnchorPositionId = 4;
         } else if (UI.anchorPointGroup.row2.c.value){
             pointPosition = [(left + width) + offsetX, (top + height / 2) + offsetY, offsetZ];
-            originDistanceToNewAnchorPoint = [width, height / 2, 0];
+            // originDistanceToNewAnchorPoint = [width, height / 2, 0];
             pointPositionTxt = "[(left + width) + " + offsetX + ", " + "(top + height / 2) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Center Right";
+            newAnchorPositionId = 5;
         // Row 3
         } else if (UI.anchorPointGroup.row3.a.value){
             pointPosition = [left + offsetX, (top + height) + offsetY, offsetZ];
-            originDistanceToNewAnchorPoint = [0, height, 0];
+            // originDistanceToNewAnchorPoint = [0, height, 0];
             pointPositionTxt = "[left + " + offsetX + ", " + "(top + height) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Bottom Left";
+            newAnchorPositionId = 6;
         } else if (UI.anchorPointGroup.row3.b.value){
             pointPosition = [(left + width / 2) + offsetX, (top + height) + offsetY, offsetZ];
-            originDistanceToNewAnchorPoint = [width / 2, height, 0];
+            // originDistanceToNewAnchorPoint = [width / 2, height, 0];
             pointPositionTxt = "[(left + width / 2) + " + offsetX + ", " + "(top + height) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Bottom Center";
+            newAnchorPositionId = 7;
         } else if (UI.anchorPointGroup.row3.c.value){
             pointPosition = [(left + width) + offsetX, (top + height) + offsetY, offsetZ];
-            originDistanceToNewAnchorPoint = [width, height, 0];
+            // originDistanceToNewAnchorPoint = [width, height, 0];
             pointPositionTxt = "[(left + width) + " + offsetX + ", " + "(top + height) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Bottom Right";
+            newAnchorPositionId = 8;
         }
 
         // var totalRotation = [initialXRotationProp + initialOrientationProp[0], initialYRotationProp + initialOrientationProp[1], initialZRotationProp + initialOrientationProp[2]];
@@ -294,27 +304,45 @@ function moveAnchorPoint(){
         // var newPos = [newPosX, newPosY, newPosZ];
         // anchorPointProp.setValue(newPos);
 
-        setPropertyValue(comp, anchorPointProp, pointPosition);
-        finalAnchorValue = anchorPointProp.value;
+        // setPropertyValue(comp, anchorPointProp, pointPosition);
+        // finalAnchorValue = anchorPointProp.value;
 
-        // Add expression
-        if(UI.extraActionGroup.addExpression.value){
-            anchorPointProp.expression = "let layerRect = thisLayer.sourceRectAtTime(time, false);\nlet top = layerRect.top;\nlet left = layerRect.left;\nlet width = layerRect.width;\nlet height = layerRect.height;\n\n" + pointPositionTxt;
-        }
+        // // Move position
+        // var xOffset = (finalAnchorValue[0] - initialAnchorValue[0]) * (scaleProp.value[0]/100);
+        // var yOffset = (finalAnchorValue[1] - initialAnchorValue[1]) * (scaleProp.value[1]/100);
+        // var zOffset = (finalAnchorValue[2] - initialAnchorValue[2]) * (scaleProp.value[2]/100);
+        // var offset = [xOffset, yOffset, zOffset]; // Final anchor point position minus initial anchor point position times the scale
+        // var newPosition = [initialPositionValue[0] + offset[0], initialPositionValue[1] + offset[1], initialPositionValue[2] + offset[2]];
+        // setPropertyValue(comp, positionProp, newPosition);
 
-        // Move position
-        var xDistance = (finalAnchorValue[0] - initialAnchorValue[0]) * (scaleProp.value[0]/100);
-        var yDistance = (finalAnchorValue[1] - initialAnchorValue[1]) * (scaleProp.value[1]/100);
-        var zDistance = (finalAnchorValue[2] - initialAnchorValue[2]) * (scaleProp.value[2]/100);
-        var distance = [xDistance, yDistance, zDistance]; // Final anchor point position minus initial anchor point position times the scale
-        
-        var newPosition = [initialPositionValue[0] + distance[0], initialPositionValue[1] + distance[1], initialPositionValue[2] + distance[2]];
-        setPropertyValue(comp, positionProp, newPosition);
+        // Position + Anchor Point workaround - Charles Bordenave's solution is the best I found.
+        var anchorGridX = (newAnchorPositionId % 3) - 1;
+		var anchorGridY = Math.floor(newAnchorPositionId / 3) - 1;
+        var centerWidth = width / 2;
+		var centerHeight = height / 2;
+        anchorPointProp.expression = 
+        "fromWorld(toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + offsetX + "," + anchorGridY + "*"+ centerHeight + "+" + offsetY + ",0" + offsetZ + "]));";
+        positionProp.expression =
+        "try {\r" +
+        "	parent.fromWorld(toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + offsetX + "," + anchorGridY + "*"+ centerHeight + "+" + offsetY + ",0" + offsetZ + "]));\r" +
+        "}\r" +
+        "catch(e)\r" +
+        "{\r" +
+        "  toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + offsetX + "," + anchorGridY + "*"+ centerHeight + "+" + offsetY + ",0" + offsetZ + "]);\r" +
+        "}";
+		positionProp.expressionEnabled = false;
+		positionProp.expressionEnabled = true;
+        var newAnchorValue = anchorPointProp.valueAtTime(currentTime, false);
+		anchorPointProp.expression = "";
+		var newPositionValue = positionProp.valueAtTime(currentTime, false);
+		positionProp.expression = "";
+        setPropertyValue(comp, positionProp, newPositionValue);
+        setPropertyValue(comp, anchorPointProp, newAnchorValue);
+        var newPositionValue = positionProp.valueAtTime(currentTime, false);
 
         // Create null
         var ifAddNull = UI.extraActionGroup.nullGroup.addNull.value;
         var ifParentToNull = UI.extraActionGroup.nullGroup.parentToNull.value;
-
         if(ifAddNull){
             var nullCtrl = comp.layers.addNull();
             nullCtrl.name = "Null - " + currentLayer.name + " - " + positionTag;
@@ -324,31 +352,36 @@ function moveAnchorPoint(){
             nullCtrl.threeDLayer = currentLayer.threeDLayer; // If current layer is threeD (true), nullCtrl is threeD (true) and vice versa
 
             var nullPositionProp = nullCtrl.property("ADBE Transform Group").property("ADBE Position");
-            setPropertyValue(comp, nullPositionProp, newPosition)
+            setPropertyValue(comp, nullPositionProp, newPositionValue)
 
             currentLayer.selected = true;
             nullCtrl.selected = false;
         }
 
-        // Return rotation to its original value
-        if(resetRotation){
-            if(ifAddNull){
-                nullCtrl.parent = currentLayer;
-            }
-
-            if(currentLayer.threeDLayer){
-                setPropertyValue(comp, orientationProp, initialOrientationProp);
-                setPropertyValue(comp, xRotationProp, initialXRotationProp);
-                setPropertyValue(comp, yRotationProp, initialYRotationProp);
-                setPropertyValue(comp, zRotationProp, initialZRotationProp);
-            } else {
-                setPropertyValue(comp, zRotationProp, initialZRotationProp);
-            }
-
-            if(ifAddNull){
-                nullCtrl.parent = null;
-            }
+        // Add expression
+        if(UI.extraActionGroup.addExpression.value){
+            anchorPointProp.expression = "let layerRect = thisLayer.sourceRectAtTime(time, false);\nlet top = layerRect.top;\nlet left = layerRect.left;\nlet width = layerRect.width;\nlet height = layerRect.height;\n\n" + pointPositionTxt;
         }
+
+        // // Return rotation to its original value
+        // if(resetRotation){
+        //     if(ifAddNull){
+        //         nullCtrl.parent = currentLayer;
+        //     }
+ 
+        //     if(currentLayer.threeDLayer){
+        //         setPropertyValue(comp, orientationProp, initialOrientationProp);
+        //         setPropertyValue(comp, xRotationProp, initialXRotationProp);
+        //         setPropertyValue(comp, yRotationProp, initialYRotationProp);
+        //         setPropertyValue(comp, zRotationProp, initialZRotationProp);
+        //     } else {
+        //         setPropertyValue(comp, zRotationProp, initialZRotationProp);
+        //     }
+
+        //     if(ifAddNull){
+        //         nullCtrl.parent = null;
+        //     }
+        // }
 
         // Parent layer to null
         if(ifParentToNull){
