@@ -341,7 +341,6 @@ function moveAnchorPoint(){
 		positionProp.expression = "";
         setPropertyValue(comp, positionProp, newPositionValue);
         setPropertyValue(comp, anchorPointProp, newAnchorValue);
-        var newPositionValue = positionProp.valueAtTime(currentTime, false);
 
         // Create null
         var ifAddNull = UI.extraActionGroup.nullGroup.addNull.value;
