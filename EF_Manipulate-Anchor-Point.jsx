@@ -168,7 +168,7 @@ var UI = createUserInterface(this, resourceString, "EF_Manipulate Anchor Point")
 function setPropertyValue(comp, property, value){
     // Function inspired by zl_CreatePivotalNull_setKeys
     var currentTime = comp.time;
-    if(property.isTimeVarying == true){
+    if(property.isTimeVarying){
         var nearestKeyframeIndex = property.nearestKeyIndex(currentTime);
         property.setValueAtKey(nearestKeyframeIndex, value);
     } else {
@@ -376,7 +376,7 @@ function moveAnchorPoint(){
 
         // Add expression
         if(UI.extraActionGroup.otherGroup.addExpression.value){
-            anchorPointProp.expression = "let layerRect = thisLayer.sourceRectAtTime(time, false);\nlet top = layerRect.top;\nlet left = layerRect.left;\nlet width = layerRect.width;\nlet height = layerRect.height;\n\n" + pointPositionTxt;
+            anchorPointProp.expression = "let layerRect = thisLayer.sourceRectAtTime(time, true);\nlet top = layerRect.top;\nlet left = layerRect.left;\nlet width = layerRect.width;\nlet height = layerRect.height;\n\n" + pointPositionTxt;
         }
 
         // // Return rotation to its original value
