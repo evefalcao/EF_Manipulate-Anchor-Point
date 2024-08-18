@@ -176,6 +176,54 @@ function setPropertyValue(comp, property, value){
     }
 }
 
+// Bounding Box for layers with masks
+function getBoundingBox(layer) {
+    var comp = layer.containingComp;
+    var currentTime = comp.time;
+    var boundingBox = {};
+
+    if (layer.Masks.numProperties) {
+        var maskGroup = layer.Masks;
+        var top = Infinity, bottom = -Infinity, left = Infinity, right = -Infinity;
+        var numMasks = maskGroup.numProperties;
+
+        for (var mask = 1; mask <= numMasks; mask++) {
+            var maskShape = maskGroup.property(mask).maskShape;
+            var shape = maskShape.valueAtTime(currentTime, false);
+            var verts = shape.vertices;
+            var inTangents = shape.inTangents;
+            var outTangents = shape.outTangents;
+
+            for (var i = 0; i < verts.length; i++) {
+                var vx = verts[i][0];
+                var vy = verts[i][1];
+                var inX = vx + inTangents[i][0];
+                var inY = vy + inTangents[i][1];
+                var outX = vx + outTangents[i][0];
+                var outY = vy + outTangents[i][1];
+
+                left = Math.min(left, vx, inX, outX);
+                right = Math.max(right, vx, inX, outX);
+                top = Math.min(top, vy, inY, outY);
+                bottom = Math.max(bottom, vy, inY, outY);
+            }
+            
+            boundingBox.width = right - left;
+            boundingBox.height = bottom - top;
+            boundingBox.left = left;
+            boundingBox.top = top;
+        }
+    } else {
+        var sourceRect = layer.sourceRectAtTime(currentTime, true);
+        boundingBox.width = sourceRect.width;
+        boundingBox.height = sourceRect.height;
+        boundingBox.left = sourceRect.left;
+        boundingBox.top = sourceRect.top;
+    }
+
+    return boundingBox;
+}
+
 function moveAnchorPoint(){
     var comp = app.project.activeItem;
     var layers = comp.selectedLayers;
@@ -220,7 +268,7 @@ function moveAnchorPoint(){
         // }
 
         // Bounding box
-        var sourceRect = currentLayer.sourceRectAtTime(currentTime, false);
+        var sourceRect = getBoundingBox(currentLayer);
         var top = sourceRect.top;
         var left = sourceRect.left;
         var width = sourceRect.width;
@@ -324,14 +372,14 @@ function moveAnchorPoint(){
         var centerWidth = width / 2;
 		var centerHeight = height / 2;
         anchorPointProp.expression = 
-        "fromWorld(toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + offsetX + "," + anchorGridY + "*"+ centerHeight + "+" + offsetY + ",0" + offsetZ + "]));";
+        "fromWorld(toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + left + "+" + offsetX + "," + anchorGridY + "*"+ centerHeight + "+" + top + "+" + offsetY + ",0" + offsetZ + "]));";
         positionProp.expression =
         "try {\r" +
-        "	parent.fromWorld(toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + offsetX + "," + anchorGridY + "*"+ centerHeight + "+" + offsetY + ",0" + offsetZ + "]));\r" +
+        "	parent.fromWorld(toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + left + "+" + offsetX + "," + anchorGridY + "*"+ centerHeight + "+" + top + "+" + offsetY + ",0" + offsetZ + "]));\r" +
         "}\r" +
         "catch(e)\r" +
         "{\r" +
-        "  toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + offsetX + "," + anchorGridY + "*"+ centerHeight + "+" + offsetY + ",0" + offsetZ + "]);\r" +
+        "  toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + left + "+" + offsetX + "," + anchorGridY + "*" + centerHeight + "+" + top + "+" + offsetY + ",0" + offsetZ + "]);\r" +
         "}";
 		positionProp.expressionEnabled = false;
 		positionProp.expressionEnabled = true;
