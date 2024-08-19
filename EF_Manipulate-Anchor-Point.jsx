@@ -139,7 +139,7 @@ function setPropertyValue(comp, property, value){
     }
 }
 
-// Bounding Box for layers with masks
+// Bounding Box, also considers layers with masks
 function getBoundingBox(layer) {
     var comp = layer.containingComp;
     var currentTime = comp.time;
@@ -190,7 +190,7 @@ function getBoundingBox(layer) {
 function moveAnchorPoint(){
     var comp = app.project.activeItem;
     var layers = comp.selectedLayers;
-    // comp.selected = true;
+
     app.beginUndoGroup("Manipulate Anchor Point");
 
     for(var l = 0; l < layers.length; l++){
@@ -237,57 +237,48 @@ function moveAnchorPoint(){
         // Row 1
         if (UI.anchorPointGroup.row1.a.value){
             pointPosition = [left + offsetX, top + offsetY, offsetZ];
-            // originDistanceToNewAnchorPoint = [0, 0, 0];
             pointPositionTxt = "[left + " + offsetX + ", " + "top + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Top Left";
             newAnchorPositionId = 0;
         } else if (UI.anchorPointGroup.row1.b.value){
             pointPosition = [(left + width / 2) + offsetX, top + offsetY, offsetZ];
-            // originDistanceToNewAnchorPoint = [width / 2, 0, 0];
             pointPositionTxt = "[(left + width / 2) + " + offsetX + ", " + "top + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Top Center";
             newAnchorPositionId = 1;
         } else if (UI.anchorPointGroup.row1.c.value){
             pointPosition = [(left + width) + offsetX, top + offsetY, offsetZ];
-            // originDistanceToNewAnchorPoint = [width, 0, 0];
             pointPositionTxt = "[(left + width) + " + offsetX + ", " + "top + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Top Right";
             newAnchorPositionId = 2;
         // Row 2
         } else if (UI.anchorPointGroup.row2.a.value){
             pointPosition = [left + offsetX, (top + height / 2) + offsetY, offsetZ];
-            // originDistanceToNewAnchorPoint = [0, height / 2, 0];
             pointPositionTxt = "[left + " + offsetX + ", " + "(top + height / 2) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Center Left";
             newAnchorPositionId = 3;
         } else if (UI.anchorPointGroup.row2.b.value){
             pointPosition = [(left + width / 2) + offsetX, (top + height / 2) + offsetY, offsetZ];
-            // originDistanceToNewAnchorPoint = [width / 2, height / 2, 0];
             pointPositionTxt = "[(left + width / 2) + " + offsetX + ", " + "(top + height / 2) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Center";
             newAnchorPositionId = 4;
         } else if (UI.anchorPointGroup.row2.c.value){
             pointPosition = [(left + width) + offsetX, (top + height / 2) + offsetY, offsetZ];
-            // originDistanceToNewAnchorPoint = [width, height / 2, 0];
             pointPositionTxt = "[(left + width) + " + offsetX + ", " + "(top + height / 2) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Center Right";
             newAnchorPositionId = 5;
         // Row 3
         } else if (UI.anchorPointGroup.row3.a.value){
             pointPosition = [left + offsetX, (top + height) + offsetY, offsetZ];
-            // originDistanceToNewAnchorPoint = [0, height, 0];
             pointPositionTxt = "[left + " + offsetX + ", " + "(top + height) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Bottom Left";
             newAnchorPositionId = 6;
         } else if (UI.anchorPointGroup.row3.b.value){
             pointPosition = [(left + width / 2) + offsetX, (top + height) + offsetY, offsetZ];
-            // originDistanceToNewAnchorPoint = [width / 2, height, 0];
             pointPositionTxt = "[(left + width / 2) + " + offsetX + ", " + "(top + height) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Bottom Center";
             newAnchorPositionId = 7;
         } else if (UI.anchorPointGroup.row3.c.value){
             pointPosition = [(left + width) + offsetX, (top + height) + offsetY, offsetZ];
-            // originDistanceToNewAnchorPoint = [width, height, 0];
             pointPositionTxt = "[(left + width) + " + offsetX + ", " + "(top + height) + " + offsetY + ", " + offsetZ + "]";
             positionTag = "Bottom Right";
             newAnchorPositionId = 8;
