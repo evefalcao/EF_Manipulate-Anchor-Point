@@ -371,16 +371,31 @@ function moveAnchorPoint(){
 		var anchorGridY = Math.floor(newAnchorPositionId / 3) - 1;
         var centerWidth = width / 2;
 		var centerHeight = height / 2;
+
+        /*
+        Anchor Point expression: 
+            fromWorld(toWorld([centerWidth, centerHeight, 0] + [(anchorGridX * centerWidth + left + offsetX), (anchorGridY * centerHeight + top + offsetY), offsetZ]));
+        */
         anchorPointProp.expression = 
-        "fromWorld(toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + left + "+" + offsetX + "," + anchorGridY + "*"+ centerHeight + "+" + top + "+" + offsetY + ",0" + offsetZ + "]));";
+        "fromWorld(toWorld([" + centerWidth + ", " + centerHeight + ", 0] + [(" + anchorGridX + " * " + centerWidth + " + " + left + " + " + offsetX + "), (" + anchorGridY + " * "+ centerHeight + " + " + top + " + " + offsetY + "), " + offsetZ + "]));";
+        
+        /*
+        Position Expression:
+            try {
+                parent.fromWorld(toWorld([centerWidth, centerHeight, 0] + [(anchorGridX * centerWidth + left + offsetX), (anchorGridY * centerHeight + top + offsetY), offsetZ]));
+            }
+            catch(e){
+                toWorld([centerWidth, centerHeight, 0] + [(anchorGridX * centerWidth + left + offsetX), (anchorGridY * centerHeight + top + offsetY), offsetZ]);
+            }
+        */
         positionProp.expression =
         "try {\r" +
-        "	parent.fromWorld(toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + left + "+" + offsetX + "," + anchorGridY + "*"+ centerHeight + "+" + top + "+" + offsetY + ",0" + offsetZ + "]));\r" +
+        "\tparent.fromWorld(toWorld([" + centerWidth + ", " + centerHeight + ", 0] + [(" + anchorGridX + " * " + centerWidth + " + " + left + " + " + offsetX + "), (" + anchorGridY + " * "+ centerHeight + " + " + top + " + " + offsetY + "), " + offsetZ + "]));\r" +
         "}\r" +
-        "catch(e)\r" +
-        "{\r" +
-        "  toWorld([" + centerWidth + "," + centerHeight + ",0] + [" + anchorGridX + "*" + centerWidth + "+" + left + "+" + offsetX + "," + anchorGridY + "*" + centerHeight + "+" + top + "+" + offsetY + ",0" + offsetZ + "]);\r" +
+        "catch(e){\r" +
+        "\ttoWorld([" + centerWidth + ", " + centerHeight + ", 0] + [(" + anchorGridX + " * " + centerWidth + " + " + left + " + " + offsetX + "), (" + anchorGridY + " * " + centerHeight + " + " + top + " + " + offsetY + "), " + offsetZ + "]);\r" +
         "}";
+
 		positionProp.expressionEnabled = false;
 		positionProp.expressionEnabled = true;
         var newAnchorValue = anchorPointProp.valueAtTime(currentTime, false);
