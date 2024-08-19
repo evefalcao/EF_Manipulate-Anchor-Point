@@ -1,11 +1,11 @@
 ﻿/**========================================================================
  * ?                  EF_Manipulate-Anchor-Point.jsx
- * @author         :  Eveline Falcão (https://evelinefalcao.com)
- * @email          :  hello@evelinefalcao.com
- * @version        :  1.0.0
- * @createdFor     :  Adobe After Effects CC 2024 (Version 24.1.0 Build 78)
- * @description    :  Move Anchor Point to selected layer point. Can add and parent a null to the selected layer point. Can apply an expression to pin the anchor point.
- * @thankyou       :  Charles Bordenave (https://www.nabscripts.com) for RepositionAnchorPoint (version: 3.9) and Zack Lovatt (https://lova.tt/) for zl_CreatePivotalNull (version: 1.1).
+ * @author            Eveline Falcão (https://evelinefalcao.com)
+ * @email             hello@evelinefalcao.com
+ * @version           1.0.0
+ * @createdFor        Adobe After Effects CC 2024 (Version 24.1.0 Build 78)
+ * @description       Move Anchor Point to selected layer point. Can add and parent a null to the selected layer point. Can apply an expression to pin the anchor point.
+ * @thankyou          Charles Bordenave (https://www.nabscripts.com) for RepositionAnchorPoint (version: 3.9) and Zack Lovatt (https://lova.tt/) for zl_CreatePivotalNull (version: 1.1).
  *========================================================================**/
 
 var resourceString = 
@@ -127,43 +127,6 @@ function createUserInterface(thisObj, userInterfaceString, scriptName){
 
 var UI = createUserInterface(this, resourceString, "EF_Manipulate Anchor Point");
 
-// function rotatePointAroundAnchor(point, rotation, anchorPoint){
-//     var pitch = rotation[0] * Math.PI / 180;
-//     var yaw = rotation[1] * Math.PI / 180;
-//     var roll = rotation[2] * Math.PI / 180;
-
-//     var cosa = Math.cos(yaw);
-//     var sina = Math.sin(yaw);
-
-//     var cosb = Math.cos(pitch);
-//     var sinb = Math.sin(pitch);
-
-//     var cosc = Math.cos(roll);
-//     var sinc = Math.sin(roll);
-
-//     var Axx = cosa*cosb;
-//     var Axy = cosa*sinb*sinc - sina*cosc;
-//     var Axz = cosa*sinb*cosc + sina*sinc;
-
-//     var Ayx = sina*cosb;
-//     var Ayy = sina*sinb*sinc + cosa*cosc;
-//     var Ayz = sina*sinb*cosc - cosa*sinc;
-
-//     var Azx = -sinb;
-//     var Azy = cosb*sinc;
-//     var Azz = cosb*cosc;
-
-//     var px = point[0] - anchorPoint[0];
-//     var py = point[1] - anchorPoint[1];
-//     var pz = point[2] - anchorPoint[2];
-
-//     return [
-//         (Axx*px + Axy*py + Axz*pz) + anchorPoint[0],
-//         (Ayx*px + Ayy*py + Ayz*pz) + anchorPoint[1],
-//         (Azx*px + Azy*py + Azz*pz) + anchorPoint[2],
-//     ];
-// }
-
 // Reset rotation
 function setPropertyValue(comp, property, value){
     // Function inspired by zl_CreatePivotalNull_setKeys
@@ -252,20 +215,6 @@ function moveAnchorPoint(){
         var resetScale = false;
 
         var finalAnchorValue, pointPosition, pointPositionTxt, positionTag, originDistanceToNewAnchorPoint, newAnchorPositionId;
-        
-        // // Reset rotation
-        // if(currentLayer.threeDLayer){
-        //     if(orientationProp.isModified || xRotationProp.isModified || yRotationProp.isModified || zRotationProp.isModified){
-        //         setPropertyValue(comp, orientationProp, [0, 0, 0]);
-        //         setPropertyValue(comp, xRotationProp, 0);
-        //         setPropertyValue(comp, yRotationProp, 0);
-        //         setPropertyValue(comp, zRotationProp, 0);
-        //         resetRotation = true;
-        //     }
-        // } else if(zRotationProp.isModified){
-        //     setPropertyValue(comp, zRotationProp, 0);
-        //     resetRotation = true;
-        // }
 
         // Bounding box
         var sourceRect = getBoundingBox(currentLayer);
@@ -283,9 +232,6 @@ function moveAnchorPoint(){
         var offsetX = parseFloat(UI.offsetAnchorPoint.xText.text);
         var offsetY = parseFloat(UI.offsetAnchorPoint.yText.text);
         var offsetZ = parseFloat(UI.offsetAnchorPoint.zText.text);
-
-        // Center position
-        // pointPosition = [width/2, height/2, 0];
 
         // Radio button selection
         // Row 1
@@ -347,25 +293,6 @@ function moveAnchorPoint(){
             newAnchorPositionId = 8;
         }
 
-        // var totalRotation = [initialXRotationProp + initialOrientationProp[0], initialYRotationProp + initialOrientationProp[1], initialZRotationProp + initialOrientationProp[2]];
-        // anchorPointProp.setValue(rotatePointAroundAnchor(pointPosition, totalRotation, initialAnchorValue));
-        // var newPosX = anchorPointProp.value[0] - originDistanceToNewAnchorPoint[0];
-        // var newPosY = anchorPointProp.value[1] - originDistanceToNewAnchorPoint[1];
-        // var newPosZ = anchorPointProp.value[2] - originDistanceToNewAnchorPoint[2];
-        // var newPos = [newPosX, newPosY, newPosZ];
-        // anchorPointProp.setValue(newPos);
-
-        // setPropertyValue(comp, anchorPointProp, pointPosition);
-        // finalAnchorValue = anchorPointProp.value;
-
-        // // Move position
-        // var xOffset = (finalAnchorValue[0] - initialAnchorValue[0]) * (scaleProp.value[0]/100);
-        // var yOffset = (finalAnchorValue[1] - initialAnchorValue[1]) * (scaleProp.value[1]/100);
-        // var zOffset = (finalAnchorValue[2] - initialAnchorValue[2]) * (scaleProp.value[2]/100);
-        // var offset = [xOffset, yOffset, zOffset]; // Final anchor point position minus initial anchor point position times the scale
-        // var newPosition = [initialPositionValue[0] + offset[0], initialPositionValue[1] + offset[1], initialPositionValue[2] + offset[2]];
-        // setPropertyValue(comp, positionProp, newPosition);
-
         // Position + Anchor Point workaround - Charles Bordenave's solution is the best I found.
         var anchorGridX = (newAnchorPositionId % 3) - 1;
 		var anchorGridY = Math.floor(newAnchorPositionId / 3) - 1;
@@ -416,11 +343,12 @@ function moveAnchorPoint(){
             nullCtrl.parent = currentLayer.parent; // If layer has a parent, the nullCtrl parent will be set between the layer and its parent
             nullCtrl.threeDLayer = currentLayer.threeDLayer; // If current layer is threeD (true), nullCtrl is threeD (true) and vice versa
 
-            var nullPositionProp = nullCtrl.property("ADBE Transform Group").property("ADBE Position");
-            var nullRotationProp = nullCtrl.property("ADBE Transform Group").property("ADBE Orientation");
-            var nullRotationProp = nullCtrl.property("ADBE Transform Group").property("ADBE Rotate X");
-            var nullRotationProp = nullCtrl.property("ADBE Transform Group").property("ADBE Rotate Y");
-            var nullRotationProp = nullCtrl.property("ADBE Transform Group").property("ADBE Rotate Z");
+            var nullCtrlProps = nullCtrl.property("ADBE Transform Group");
+            var nullPositionProp = nullCtrlProps.property("ADBE Position");
+            var nullRotationProp = nullCtrlProps.property("ADBE Orientation");
+            var nullRotationProp = nullCtrlProps.property("ADBE Rotate X");
+            var nullRotationProp = nullCtrlProps.property("ADBE Rotate Y");
+            var nullRotationProp = nullCtrlProps.property("ADBE Rotate Z");
             setPropertyValue(comp, nullPositionProp, newPositionValue)
 
             if(UI.extraActionGroup.otherGroup.rotateNull.value){
@@ -441,26 +369,6 @@ function moveAnchorPoint(){
         if(UI.extraActionGroup.otherGroup.addExpression.value){
             anchorPointProp.expression = "let layerRect = thisLayer.sourceRectAtTime(time, true);\nlet top = layerRect.top;\nlet left = layerRect.left;\nlet width = layerRect.width;\nlet height = layerRect.height;\n\n" + pointPositionTxt;
         }
-
-        // // Return rotation to its original value
-        // if(resetRotation){
-        //     if(ifAddNull){
-        //         nullCtrl.parent = currentLayer;
-        //     }
- 
-        //     if(currentLayer.threeDLayer){
-        //         setPropertyValue(comp, orientationProp, initialOrientationProp);
-        //         setPropertyValue(comp, xRotationProp, initialXRotationProp);
-        //         setPropertyValue(comp, yRotationProp, initialYRotationProp);
-        //         setPropertyValue(comp, zRotationProp, initialZRotationProp);
-        //     } else {
-        //         setPropertyValue(comp, zRotationProp, initialZRotationProp);
-        //     }
-
-        //     if(ifAddNull){
-        //         nullCtrl.parent = null;
-        //     }
-        // }
 
         // Parent layer to null
         if(ifParentToNull){
