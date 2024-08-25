@@ -1,5 +1,5 @@
 # Manipulate Anchor Point
-[![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M212BC7C)
 
 ScriptUI that moves the anchor point of a layer, with options to create a null and/or add anchor point expression and offset it.
 
